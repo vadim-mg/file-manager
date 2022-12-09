@@ -1,11 +1,12 @@
 const { stdin, stdout } = process
+import { prompt } from "./fs/navigation.js"
+import { executeCommand } from "./commands/commands.js"
 
 const userNameArg = "username"
 
-// stdin.on("data", (data) => {
-//   // stdout.write(data)
-// })
-stdin.resume()
+stdin.on("data", (data) => {
+  stdout.write(executeCommand(data))
+})
 
 process.on("exit", (exitCode) => {
   if (exitCode === 0) {
@@ -35,4 +36,6 @@ if (!userName) {
   process.exit(1)
 }
 
-console.log(`Welcome to the File Manager, ${userName}!`)
+stdout.write(`Welcome to the File Manager, ${userName}!\n`)
+stdout.write(prompt())
+// console.log(allCommands)
