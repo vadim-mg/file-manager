@@ -1,6 +1,6 @@
 import { homedir } from "os"
 import { dirname, resolve as pathResolve } from "node:path"
-import { InvalidInputError } from "../errors/errors.js"
+import { InvalidInputError, OperationFailedError } from "../errors/errors.js"
 import { readdir } from "node:fs/promises"
 import { caseInsensitiveSort } from "../utils/utils.js"
 
@@ -22,7 +22,6 @@ const up = (argv = []) =>
 
 const cd = (argv) =>
   new Promise((resolve, reject) => {
-    // console.log(argv)
     if (!argv.length) {
       reject(
         new InvalidInputError(
@@ -30,6 +29,7 @@ const cd = (argv) =>
         )
       )
     }
+
     const targetPath = argv
       .join(" ")
       .trim(" ")
@@ -37,8 +37,19 @@ const cd = (argv) =>
 
     try {
       process.chdir(targetPath)
-    } catch {
-      reject(new InvalidInputError(`No such directory: "${targetPath}"`))
+    } catch (error) {
+      switch (error.code) {
+        case "ENOENT":
+          reject(new InvalidInputError(`No such directory: "${targetPath}"`))
+          break
+        case "EPERM":
+          reject(new OperationFailedError(`Operation not permitted`))
+        default:
+          reject(new OperationFailedError(`Error with code:${error.code}`))
+          console.log('-------------------------debug-----------------------')
+          console.log(error)
+          console.log('-------------------------debug-----------------------')
+      }
     }
 
     resolve("")
