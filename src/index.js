@@ -19,7 +19,7 @@ process.on("exit", (exitCode) => {
   if (exitCode === 0) {
     stdout.write(`Thank you for using File Manager, ${userName}, goodbye!\n`)
   } else {
-    stdout.write(`An error has occurred! ExitCode: ${exitCode}`)
+    stdout.write(`An error has occurred! ExitCode: ${exitCode}\n`)
   }
 })
 

@@ -46,9 +46,9 @@ const cd = (argv) =>
           reject(new OperationFailedError(`Operation not permitted`))
         default:
           reject(new OperationFailedError(`Error with code:${error.code}`))
-          console.log('-------------------------debug-----------------------')
+          console.log("-------------------------debug-----------------------")
           console.log(error)
-          console.log('-------------------------debug-----------------------')
+          console.log("-------------------------debug-----------------------")
       }
     }
 
@@ -99,6 +99,7 @@ const fsCommands = {
   up: up,
   cd: cd,
   ls: ls,
+  ".exit": () => process.exit(0),
 }
 
 export { prompt, fsCommands }
