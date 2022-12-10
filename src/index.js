@@ -5,7 +5,14 @@ import { executeCommand } from "./commands/commands.js"
 const userNameArg = "username"
 
 stdin.on("data", (data) => {
-  stdout.write(executeCommand(data))
+  executeCommand(data)
+    .then((result) => {
+      stdout.write(result)
+    })
+    .catch((err) => stdout.write(`${err.name} : ${err.message} \n`))
+    .finally(() => {
+      stdout.write(prompt())
+    })
 })
 
 process.on("exit", (exitCode) => {

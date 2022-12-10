@@ -1,25 +1,22 @@
-import { prompt, fsCommands } from "../fs/navigation.js"
+import { fsCommands } from "../fs/navigation.js"
 import { EOL } from "node:os"
 import { InvalidInputError } from "../errors/errors.js"
 
-const executeCommand = (data) => {
-  try {
+const executeCommand = (data) =>
+  new Promise(async (resolve, reject) => {
     const inputString = data.toString().slice(0, -EOL.length)
-    const commandArgv = inputString.split(" ")
+    const commandArgv = inputString.trim().split(" ")
     const commandName = commandArgv.shift()
+    if (commandName == "") {
+      resolve("")
+    }
     if (!fsCommands[commandName]) {
-      throw new InvalidInputError("Unknown command!")
-    }
-    return fsCommands[commandName](commandArgv) + prompt()
-  } catch (error) {
-    let errorText = ""
-    if (error instanceof InvalidInputError) {
-      errorText = error.message
+      reject(new InvalidInputError("Unknown command!"))
     } else {
-      errorText = "Operation Failed"
+      await fsCommands[commandName](commandArgv)
+        .then((result) => resolve(result))
+        .catch((err) => reject(err))
     }
-    return errorText + "\n" + prompt()
-  }
-}
+  })
 
 export { executeCommand }

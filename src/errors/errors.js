@@ -1,8 +1,8 @@
 class InvalidInputError extends Error {
   constructor(message) {
-    super(`Invalid input: ${message}`);
-    this.name = "InvalidInputError"; 
+    super(message)
+    this.name = "InvalidInput"
   }
 }
 
-export {InvalidInputError}
+export { InvalidInputError }
