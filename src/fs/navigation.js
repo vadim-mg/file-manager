@@ -1,64 +1,87 @@
 import { homedir } from "os"
-import { dirname } from "node:path"
+import { dirname, resolve as pathResolve } from "node:path"
 import { InvalidInputError } from "../errors/errors.js"
 import { readdir } from "node:fs/promises"
 import { caseInsensitiveSort } from "../utils/utils.js"
-let workingDir = homedir()
 
-const prompt = () => `You are currently in ${workingDir} # `
+process.chdir(homedir())
 
-const up = (argv = []) => {
-  return new Promise((resolve, reject) => {
+const prompt = () => `You are currently in ${process.cwd()} # `
+
+const up = (argv = []) =>
+  new Promise((resolve, reject) => {
     if (argv.length) {
       reject(
         new InvalidInputError('command "up" doesn\'t support any parameters!')
       )
     }
-    workingDir = dirname(workingDir)
+    process.chdir(dirname(process.cwd()))
+
     resolve("")
   })
-}
 
-const cd = (argv) => {
-  console.log(argv)
-}
+const cd = (argv) =>
+  new Promise((resolve, reject) => {
+    // console.log(argv)
+    if (!argv.length) {
+      reject(
+        new InvalidInputError(
+          'command "cd" must have one parameter - target directory'
+        )
+      )
+    }
+    const targetPath = argv
+      .join(" ")
+      .trim(" ")
+      .replace(/^\"|\"$/g, "")
 
-const ls = (argv = []) => {
-  return new Promise((resolve, reject) => {
+    try {
+      process.chdir(targetPath)
+    } catch {
+      reject(new InvalidInputError(`No such directory: "${targetPath}"`))
+    }
+
+    resolve("")
+  })
+
+const ls = (argv = []) =>
+  new Promise((resolve, reject) => {
     if (argv.length) {
       reject(
         new InvalidInputError('command "ls" doesn\'t support any parameters!')
       )
     } else {
-      return readdir(workingDir, { withFileTypes: true }).then((fsObjects) => {
-        fsObjects = fsObjects.reduce(
-          (acc, val) => {
-            if (val.isDirectory()) {
-              acc.dirs.push(val.name)
-            } else if (val.isFile()) {
-              acc.files.push(val.name)
-            }
-            return acc
-          },
-          { files: [], dirs: [] }
-        )
+      return readdir(process.cwd(), { withFileTypes: true }).then(
+        (fsObjects) => {
+          fsObjects = fsObjects.reduce(
+            (acc, val) => {
+              if (val.isDirectory()) {
+                acc.dirs.push(val.name)
+              } else if (val.isFile()) {
+                acc.files.push(val.name)
+              }
+              return acc
+            },
+            { files: [], dirs: [] }
+          )
 
-        const setTypeFile = (val) => new Object({ name: val, type: "file" })
-        const setTypeDir = (val) => new Object({ name: val, type: "directory" })
+          const setTypeFile = (val) => new Object({ name: val, type: "file" })
+          const setTypeDir = (val) =>
+            new Object({ name: val, type: "directory" })
 
-        fsObjects.files = fsObjects.files
-          .sort(caseInsensitiveSort)
-          .map(setTypeFile)
-        fsObjects.dirs = fsObjects.dirs
-          .sort(caseInsensitiveSort)
-          .map(setTypeDir)
+          fsObjects.files = fsObjects.files
+            .sort(caseInsensitiveSort)
+            .map(setTypeFile)
+          fsObjects.dirs = fsObjects.dirs
+            .sort(caseInsensitiveSort)
+            .map(setTypeDir)
 
-        console.table(fsObjects.dirs.concat(fsObjects.files))
-        resolve("")
-      })
+          console.table(fsObjects.dirs.concat(fsObjects.files))
+          resolve("")
+        }
+      )
     }
   })
-}
 
 /* All functions in array must return a Promise ! */
 const fsCommands = {
