@@ -1,5 +1,7 @@
 import { InvalidInputError, OpFieldError } from "../errors/errors.js"
 import * as errMsgs from "../errors/error_messages.js"
+import * as path from "node:path"
+import { createReadStream } from "node:fs"
 
 const cat = (argv = []) =>
   new Promise((resolve, reject) => {
@@ -7,8 +9,29 @@ const cat = (argv = []) =>
       reject(
         new InvalidInputError(errMsgs.NEED_ONE_PARAM("cat", "path_to_file"))
       )
+    } else {
+      const targetPath = path.resolve(argv.join(" ").replace(/^\"|\"$/g, ""))
+
+      const stream = createReadStream(targetPath, {
+        encoding: "utf-8",
+      })
+
+      stream.on("data", (chunk) => process.stdout.write(chunk))
+      stream.on("end", () => resolve(""))
+      stream.on("error", (error) => {
+        stream.close()
+        switch (error.code) {
+          case "ENOENT":
+            reject(new OpFieldError(errMsgs.NO_SUCH_PATH(targetPath), error))
+            break
+          case "EPERM":
+            reject(new OpFieldError(errMsgs.NOT_PERMIT, error))
+            break
+          default:
+            reject(new OpFieldError(errMsgs.UNKNOWN(error.code), error))
+        }
+      })
     }
-    resolve("")
   })
 
 const add = (argv = []) =>
@@ -17,8 +40,9 @@ const add = (argv = []) =>
       reject(
         new InvalidInputError(errMsgs.NEED_ONE_PARAM("add", "path_to_file"))
       )
+    } else {
+      resolve("")
     }
-    resolve("")
   })
 
 const rn = (argv = []) =>
@@ -29,8 +53,9 @@ const rn = (argv = []) =>
           errMsgs.NEED_TWO_PARAMS("rn", "path_to_file new_filename")
         )
       )
+    } else {
+      resolve("")
     }
-    resolve("")
   })
 
 const cp = (argv = []) =>
@@ -41,8 +66,9 @@ const cp = (argv = []) =>
           errMsgs.NEED_TWO_PARAMS("cp", "path_to_file path_to_new_directory")
         )
       )
+    } else {
+      resolve("")
     }
-    resolve("")
   })
 
 const mv = (argv = []) =>
@@ -53,8 +79,9 @@ const mv = (argv = []) =>
           errMsgs.NEED_TWO_PARAMS("mv", "path_to_file path_to_new_directory")
         )
       )
+    } else {
+      resolve("")
     }
-    resolve("")
   })
 
 const rm = (argv = []) =>
@@ -63,8 +90,9 @@ const rm = (argv = []) =>
       reject(
         new InvalidInputError(errMsgs.NEED_ONE_PARAM("rm", "path_to_file"))
       )
+    } else {
+      resolve("")
     }
-    resolve("")
   })
 
 /* All functions in array must return a Promise ! */
