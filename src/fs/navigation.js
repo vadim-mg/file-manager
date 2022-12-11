@@ -28,7 +28,7 @@ const cd = (argv) =>
     } else {
       const targetPath = argv
         .join(" ")
-        .trim(" ")
+        // .trim(" ")
         .replace(/^\"|\"$/g, "")
 
       try {
