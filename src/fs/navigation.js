@@ -1,6 +1,7 @@
 import { homedir } from "os"
-import { dirname, resolve as pathResolve } from "node:path"
-import { InvalidInputError, OperationFailedError } from "../errors/errors.js"
+import { dirname } from "node:path"
+import { InvalidInputError, OpFieldError } from "../errors/errors.js"
+import * as errMsgs from "../errors/error_messages.js"
 import { readdir } from "node:fs/promises"
 import { caseInsensitiveSort } from "../utils/utils.js"
 
@@ -11,56 +12,48 @@ const prompt = () => `You are currently in ${process.cwd()} # `
 const up = (argv = []) =>
   new Promise((resolve, reject) => {
     if (argv.length) {
-      reject(
-        new InvalidInputError('command "up" doesn\'t support any parameters!')
-      )
+      reject(new InvalidInputError(errMsgs.NOT_NEED_PARAMS("up")))
+    } else {
+      process.chdir(dirname(process.cwd()))
+      resolve("")
     }
-    process.chdir(dirname(process.cwd()))
-
-    resolve("")
   })
 
 const cd = (argv) =>
   new Promise((resolve, reject) => {
     if (!argv.length) {
       reject(
-        new InvalidInputError(
-          'command "cd" must have one parameter - target directory'
-        )
+        new InvalidInputError(errMsgs.NEED_ONE_PARAM("cd", "target directory"))
       )
-    }
+    } else {
+      const targetPath = argv
+        .join(" ")
+        .trim(" ")
+        .replace(/^\"|\"$/g, "")
 
-    const targetPath = argv
-      .join(" ")
-      .trim(" ")
-      .replace(/^\"|\"$/g, "")
-
-    try {
-      process.chdir(targetPath)
-    } catch (error) {
-      switch (error.code) {
-        case "ENOENT":
-          reject(new InvalidInputError(`No such directory: "${targetPath}"`))
-          break
-        case "EPERM":
-          reject(new OperationFailedError(`Operation not permitted`))
-        default:
-          reject(new OperationFailedError(`Error with code:${error.code}`))
-          console.log("-------------------------debug-----------------------")
-          console.log(error)
-          console.log("-------------------------debug-----------------------")
+      try {
+        process.chdir(targetPath)
+      } catch (error) {
+        switch (error.code) {
+          case "ENOENT":
+            reject(new OpFieldError(errMsgs.NO_SUCH_PATH(targetPath), error))
+            break
+          case "EPERM":
+            reject(new OpFieldError(errMsgs.NOT_PERMIT, error))
+            break
+          default:
+            reject(new OpFieldError(errMsgs.UNKNOWN(error.code), error))
+        }
       }
-    }
 
-    resolve("")
+      resolve("")
+    }
   })
 
 const ls = (argv = []) =>
   new Promise((resolve, reject) => {
     if (argv.length) {
-      reject(
-        new InvalidInputError('command "ls" doesn\'t support any parameters!')
-      )
+      reject(new InvalidInputError(errMsgs.NOT_NEED_PARAMS(ls.name)))
     } else {
       return readdir(process.cwd(), { withFileTypes: true }).then(
         (fsObjects) => {
