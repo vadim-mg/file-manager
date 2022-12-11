@@ -27,6 +27,8 @@ const executeCommand = (data) =>
             switch (err.code) {
               case "ENOENT":
                 return reject(new OpFieldError(errMsgs.NO_SUCH_PATH(err.dest ?? err.path), err))
+              case "EEXIST":
+                return reject(new OpFieldError(errMsgs.ALREADY_EXIST(err.dest ?? err.path), err))
               case "EPERM":
                 return reject(new OpFieldError(errMsgs.NOT_PERMIT, err))
               default:

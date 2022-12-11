@@ -12,6 +12,9 @@ export const NEED_TWO_PARAMS = (name = "", parameters = "") =>
 export const NO_SUCH_PATH = (targetPath = "") =>
   `No such file or directory ${param(targetPath)}`
 
+export const ALREADY_EXIST = (targetPath = "") =>
+  `File ${param(targetPath)} already exists!`
+
 export const NOT_PERMIT = "Operation not permitted"
 
 export const UNKNOWN = (code = "") => `Error with code:${param(code)}`

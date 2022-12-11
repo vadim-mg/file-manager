@@ -3,6 +3,7 @@ import * as errMsgs from "../errors/error_messages.js"
 import * as path from "node:path"
 import { createReadStream } from "node:fs"
 import { pathFromArgv } from "../utils/utils.js"
+import { appendFile } from "node:fs/promises"
 
 const cat = (argv = []) =>
   new Promise((resolve, reject) => {
@@ -16,7 +17,7 @@ const cat = (argv = []) =>
     })
 
     stream.on("data", (chunk) => process.stdout.write(chunk))
-    stream.on("end", () => resolve(""))
+    stream.on("end", () => resolve("\n"))
     stream.on("error", (error) => {
       stream.close()
       return reject(error)
@@ -26,10 +27,13 @@ const cat = (argv = []) =>
 const add = (argv = []) =>
   new Promise((resolve, reject) => {
     if (!argv.length) {
-      reject(new InvalidInputError(errMsgs.NEED_ONE_PARAM("add", "path_to_file")))
-    } else {
-      resolve("")
+      return reject(new InvalidInputError(errMsgs.NEED_ONE_PARAM("add", "new_file_name")))
     }
+
+    const targetPath = pathFromArgv(argv)
+    appendFile(targetPath, "", { flag: "ax+" })
+      .then((result) => resolve(""))
+      .catch((err) => reject(err))
   })
 
 const rn = (argv = []) =>
