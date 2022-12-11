@@ -1,9 +1,9 @@
 import { homedir } from "os"
 import { dirname } from "node:path"
-import { InvalidInputError, OpFieldError } from "../errors/errors.js"
+import { InvalidInputError } from "../errors/errors.js"
 import * as errMsgs from "../errors/error_messages.js"
 import { readdir } from "node:fs/promises"
-import { caseInsensitiveSort } from "../utils/utils.js"
+import { caseInsensitiveSort, pathFromArgv } from "../utils/utils.js"
 
 process.chdir(homedir())
 
@@ -22,41 +22,25 @@ const up = (argv = []) =>
 const cd = (argv) =>
   new Promise((resolve, reject) => {
     if (!argv.length) {
-      reject(
+      return reject(
         new InvalidInputError(errMsgs.NEED_ONE_PARAM("cd", "target directory"))
       )
-    } else {
-      const targetPath = argv
-        .join(" ")
-        // .trim(" ")
-        .replace(/^\"|\"$/g, "")
-
-      try {
-        process.chdir(targetPath)
-      } catch (error) {
-        switch (error.code) {
-          case "ENOENT":
-            reject(new OpFieldError(errMsgs.NO_SUCH_PATH(targetPath), error))
-            break
-          case "EPERM":
-            reject(new OpFieldError(errMsgs.NOT_PERMIT, error))
-            break
-          default:
-            reject(new OpFieldError(errMsgs.UNKNOWN(error.code), error))
-        }
-      }
-
-      resolve("")
+    }
+    try {
+      const targetPath = pathFromArgv(argv)
+      console.log(targetPath)
+      process.chdir(targetPath)
+      return resolve("")
+    } catch (error) {
+      return reject(error)
     }
   })
 
 const ls = (argv = []) =>
-  new Promise((resolve, reject) => {
-    if (argv.length) {
-      reject(new InvalidInputError(errMsgs.NOT_NEED_PARAMS(ls.name)))
-    } else {
-      return readdir(process.cwd(), { withFileTypes: true }).then(
-        (fsObjects) => {
+  new Promise((resolve, reject) =>
+    argv.length
+      ? reject(new InvalidInputError(errMsgs.NOT_NEED_PARAMS(ls.name)))
+      : readdir(process.cwd(), { withFileTypes: true }).then((fsObjects) => {
           fsObjects = fsObjects.reduce(
             (acc, val) => {
               if (val.isDirectory()) {
@@ -70,22 +54,15 @@ const ls = (argv = []) =>
           )
 
           const setTypeFile = (val) => new Object({ name: val, type: "file" })
-          const setTypeDir = (val) =>
-            new Object({ name: val, type: "directory" })
+          const setTypeDir = (val) => new Object({ name: val, type: "directory" })
 
-          fsObjects.files = fsObjects.files
-            .sort(caseInsensitiveSort)
-            .map(setTypeFile)
-          fsObjects.dirs = fsObjects.dirs
-            .sort(caseInsensitiveSort)
-            .map(setTypeDir)
+          fsObjects.files = fsObjects.files.sort(caseInsensitiveSort).map(setTypeFile)
+          fsObjects.dirs = fsObjects.dirs.sort(caseInsensitiveSort).map(setTypeDir)
 
           console.table(fsObjects.dirs.concat(fsObjects.files))
           resolve("")
-        }
-      )
-    }
-  })
+        })
+  )
 
 /* All functions in array must return a Promise ! */
 const fsCommands = {
