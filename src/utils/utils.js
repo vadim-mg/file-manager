@@ -1,3 +1,5 @@
+import { resolve } from "node:path"
+
 const caseInsensitiveSort = (a, b) => {
   a = a.toLowerCase
   b = b.toLowerCase
@@ -20,4 +22,6 @@ const currentDate = () => {
   return year + "-" + month + "-" + date
 }
 
-export { caseInsensitiveSort, currentDate }
+const pathFromArgv = (argv) => resolve(argv.join(" ").replace(/^\"|\"$/g, ""))
+
+export { caseInsensitiveSort, currentDate, pathFromArgv }
