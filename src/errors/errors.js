@@ -1,7 +1,7 @@
 import { logger } from "./logger.js"
 import { currentDate } from "../utils/utils.js"
 
-class fileManagerError extends Error {
+class FileManagerError extends Error {
   constructor(message, errorForDebug = null) {
     super(message)
     this.errorForDebug = errorForDebug
@@ -15,17 +15,17 @@ class fileManagerError extends Error {
   }
 }
 
-class InvalidInputError extends fileManagerError {
+class InvalidInputError extends FileManagerError {
   constructor(message) {
     super(message)
     this.name = "Invalid input"
   }
 }
-class OpFieldError extends fileManagerError {
+class OpFieldError extends FileManagerError {
   constructor(message, errorForDebug = null) {
     super(message, errorForDebug)
     this.name = "Operation failed"
   }
 }
 
-export { InvalidInputError, OpFieldError }
+export { InvalidInputError, OpFieldError, FileManagerError }
