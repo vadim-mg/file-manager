@@ -1,5 +1,6 @@
 import { logger } from "./logger.js"
 import { currentDate } from "../utils/utils.js"
+import {UNKNOWN_COMMAND} from "./error_messages.js"
 
 class FileManagerError extends Error {
   constructor(message, errorForDebug = null) {
@@ -16,7 +17,7 @@ class FileManagerError extends Error {
 }
 
 class InvalidInputError extends FileManagerError {
-  constructor(message) {
+  constructor(message = UNKNOWN_COMMAND) {
     super(message)
     this.name = "Invalid input"
   }

@@ -1,15 +1,13 @@
 import { InvalidInputError, OpFieldError } from "../errors/errors.js"
 import * as errMsgs from "../errors/error_messages.js"
-import * as path from "node:path"
+import { checkParams } from "../errors/error_handler.js"
 import { createReadStream } from "node:fs"
 import { pathFromArgv } from "../utils/utils.js"
 import { appendFile } from "node:fs/promises"
 
 const cat = (argv = []) =>
   new Promise((resolve, reject) => {
-    if (!argv.length) {
-      return reject(new InvalidInputError(errMsgs.NEED_ONE_PARAM("cat", "path_to_file")))
-    }
+    checkParams("cat", argv, 1, "path_to_file")
 
     const targetPath = pathFromArgv(argv)
     const stream = createReadStream(targetPath, {
@@ -24,17 +22,12 @@ const cat = (argv = []) =>
     })
   })
 
-const add = (argv = []) =>
-  new Promise((resolve, reject) => {
-    if (!argv.length) {
-      return reject(new InvalidInputError(errMsgs.NEED_ONE_PARAM("add", "new_file_name")))
-    }
-
-    const targetPath = pathFromArgv(argv)
-    appendFile(targetPath, "", { flag: "ax+" })
-      .then((result) => resolve(""))
-      .catch((err) => reject(err))
-  })
+const add = async (argv = []) => {
+  checkParams("add", argv, 1, "new_file_name")
+  const targetPath = pathFromArgv(argv)
+  await appendFile(targetPath, "", { flag: "ax+" })
+  return ""
+}
 
 const rn = (argv = []) =>
   new Promise((resolve, reject) => {

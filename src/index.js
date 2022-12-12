@@ -1,18 +1,19 @@
 const { stdin, stdout } = process
+import { EOL } from "node:os"
 import { prompt } from "./fs/navigation.js"
 import { executeCommand } from "./commands/commands.js"
 
 const userNameArg = "username"
 
-stdin.on("data", (data) => {
-  executeCommand(data)
-    .then((result) => {
-      stdout.write(result)
-    })
-    .catch((err) => stdout.write(`${err.name} : ${err.message} \n`))
-    .finally(() => {
-      stdout.write(prompt())
-    })
+stdin.on("data", async (data) => {
+  try {
+    const result = await executeCommand(data.toString().slice(0, -EOL.length))
+    stdout.write(result)
+  } catch (error) {
+    stdout.write(`${error.name} : ${error.message} \n`)
+  } finally {
+    stdout.write(prompt())
+  }
 })
 
 process.on("exit", (exitCode) => {
