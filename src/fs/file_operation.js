@@ -1,5 +1,3 @@
-import { InvalidInputError, OpFieldError } from "../errors/errors.js"
-import * as errMsgs from "../errors/error_messages.js"
 import { checkParams } from "../errors/error_handler.js"
 import { createReadStream } from "node:fs"
 import { pathFromArgv } from "../utils/utils.js"
@@ -29,51 +27,25 @@ const add = async (argv = []) => {
   return ""
 }
 
-const rn = (argv = []) =>
-  new Promise((resolve, reject) => {
-    if (!argv.length) {
-      reject(
-        new InvalidInputError(errMsgs.NEED_TWO_PARAMS("rn", "path_to_file new_filename"))
-      )
-    } else {
-      resolve("")
-    }
-  })
+const rn = async (argv = []) => {
+  checkParams("rn", argv, 2, "path_to_file new_filename")
+  return ""
+}
 
-const cp = (argv = []) =>
-  new Promise((resolve, reject) => {
-    if (!argv.length) {
-      reject(
-        new InvalidInputError(
-          errMsgs.NEED_TWO_PARAMS("cp", "path_to_file path_to_new_directory")
-        )
-      )
-    } else {
-      resolve("")
-    }
-  })
+const cp = (argv = []) => {
+  checkParams("cp", argv, 2, "path_to_file path_to_new_file")
+  return ""
+}
 
-const mv = (argv = []) =>
-  new Promise((resolve, reject) => {
-    if (!argv.length) {
-      reject(
-        new InvalidInputError(
-          errMsgs.NEED_TWO_PARAMS("mv", "path_to_file path_to_new_directory")
-        )
-      )
-    } else {
-      resolve("")
-    }
-  })
+const mv = (argv = []) => {
+  checkParams("mv", argv, 2, "path_to_file path_to_new_file")
+  return ""
+}
 
-const rm = (argv = []) =>
-  new Promise((resolve, reject) => {
-    if (!argv.length) {
-      reject(new InvalidInputError(errMsgs.NEED_ONE_PARAM("rm", "path_to_file")))
-    } else {
-      resolve("")
-    }
-  })
+const rm = (argv = []) => {
+  checkParams("rm", argv, 1, "path_to_file")
+  return ""
+}
 
 /* All functions in array must return a Promise ! */
 const foCommands = {

@@ -20,7 +20,8 @@ export const errorHandler = (err) => {
 export const checkParams = (cmd, argv, needCount, needParams = "") => {
   if (argv.length && !needCount) {
     throw new InvalidInputError(errMsgs.NOT_NEED_PARAMS(cmd))
-  } else if (!argv.length && needCount) {
-    throw new InvalidInputError(errMsgs.NEED_ONE_PARAM(cmd, needParams))
+  }
+  if (argv.length !== needCount) {
+    throw new InvalidInputError(errMsgs.NEED_PARAMS(cmd, needCount, needParams))
   }
 }

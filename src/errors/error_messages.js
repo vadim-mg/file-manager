@@ -3,11 +3,9 @@ const param = (name) => (name.length ? `"${name}"` : "")
 export const NOT_NEED_PARAMS = (name = "") =>
   `command ${param(name)} doesn\'t support any parameters!`
 
-export const NEED_ONE_PARAM = (name = "", parameters = "") =>
-  `command ${param(name)} must have one parameter ${param(parameters)}`
-
-export const NEED_TWO_PARAMS = (name = "", parameters = "") =>
-  `command ${param(name)} must have two parameters ${param(parameters)}`
+export const NEED_PARAMS = (name, countParameters, parameters = "") =>
+  `command ${param(name)} must have ${countParameters} ` +
+  `parameter${countParameters > 1 ? "s" : ""} ${param(parameters)}`
 
 export const NO_SUCH_PATH = (targetPath = "") =>
   `No such file or directory ${param(targetPath)}`
