@@ -24,4 +24,27 @@ const currentDate = () => {
 
 const pathFromArgv = (argv) => resolve(argv.join(" ").replace(/^\"|\"$/g, ""))
 
-export { caseInsensitiveSort, currentDate, pathFromArgv }
+const parseInputStr = (inputString) => {
+  const commandRegExp = /^\s*\w+/
+  const paramRegExp =
+    /(\s+[a-zA-Zа-яА-Я0-9\_\\\/\:\-\.\?\+]+|\s+\"[\ \a-zA-Zа-яА-Я0-9\_\\\/\:\-\.\?\+]+\")/g
+
+  inputString = inputString.trim()
+  let cmdName = commandRegExp.exec(inputString, "")
+
+  if (!cmdName) {
+    return { commandName: "", commandParams: "" }
+  }
+  cmdName = cmdName[0].trim()
+
+  const params = []
+  let result = inputString.match(paramRegExp)
+  if (result) {
+    result.forEach((inputString) => {
+      params.push(inputString.trim().replace(/\"/g, ""))
+    })
+  }
+  return { commandName: cmdName, commandParams: params }
+}
+
+export { caseInsensitiveSort, currentDate, pathFromArgv, parseInputStr }

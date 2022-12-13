@@ -1,13 +1,12 @@
 import { fsCommands } from "../fs/navigation.js"
 import { foCommands } from "../fs/file_operation.js"
-import { EOL } from "node:os"
+import { parseInputStr } from "../utils/utils.js"
 import { InvalidInputError } from "../errors/errors.js"
 import { errorHandler } from "../errors/error_handler.js"
 
 const executeCommand = async (inputString) => {
   try {
-    const commandArgv = inputString.trim().split(" ")
-    const commandName = commandArgv.shift()
+    const { commandName, commandParams } = parseInputStr(inputString)
 
     if (commandName === "") return ""
 
@@ -15,7 +14,7 @@ const executeCommand = async (inputString) => {
 
     for (let i = 0; i < libs.length; i++) {
       if (libs[i][commandName]) {
-        return await libs[i][commandName](commandArgv)
+        return await libs[i][commandName](commandParams)
       }
     }
     throw new InvalidInputError()
