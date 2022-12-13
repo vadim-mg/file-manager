@@ -1,5 +1,6 @@
 import { checkParams } from "../errors/error_handler.js"
 import { createReadStream } from "node:fs"
+import { rename } from "node:fs/promises"
 import { pathFromArgv } from "../utils/utils.js"
 import { appendFile } from "node:fs/promises"
 
@@ -29,6 +30,7 @@ const add = async (argv = []) => {
 
 const rn = async (argv = []) => {
   checkParams("rn", argv, 2, "path_to_file new_filename")
+  await rename(argv[0], argv[1])
   return ""
 }
 
