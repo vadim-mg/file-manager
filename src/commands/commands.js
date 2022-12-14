@@ -6,7 +6,11 @@ import { errorHandler } from "../errors/error_handler.js"
 
 const executeCommand = async (inputString) => {
   try {
-    const { commandName, commandParams } = parseInputStr(inputString)
+    const { commandName, commandParams, error } = parseInputStr(inputString)
+
+    if(error){
+      throw new InvalidInputError('Not correct input data')
+    }
 
     if (commandName === "") return ""
 

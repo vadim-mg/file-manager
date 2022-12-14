@@ -25,26 +25,40 @@ const currentDate = () => {
 const pathFromArgv = (argv) => resolve(argv.join(" ").replace(/^\"|\"$/g, ""))
 
 const parseInputStr = (inputString) => {
-  const commandRegExp = /^\s*\w+/
-  const paramRegExp =
-    /(\s+[a-zA-Zа-яА-Я0-9\_\\\/\:\-\.\?\+]+|\s+\"[\ \a-zA-Zа-яА-Я0-9\_\\\/\:\-\.\?\+]+\")/g
-
-  inputString = inputString.trim()
-  let cmdName = commandRegExp.exec(inputString, "")
-
-  if (!cmdName) {
-    return { commandName: "", commandParams: "" }
+  const words = []
+  let countWords = 0
+  let wordInBrackets = false
+  let error = false
+  for (let i = 0; i < inputString.length; i++) {
+    let char = inputString[i]
+    if (words.length === countWords) {
+      words.push("")
+    }
+    switch (char) {
+      case '"':
+        if (words[countWords].length && !wordInBrackets) {
+          error = true
+        }
+        if (wordInBrackets) {
+          countWords++
+        }
+        wordInBrackets = !wordInBrackets
+        break
+      case " ":
+        if (!wordInBrackets) {
+          if (words[countWords] !== "") {
+            countWords++
+          }
+          break
+        }
+      default:
+        words[countWords] += char
+    }
   }
-  cmdName = cmdName[0].trim()
-
-  const params = []
-  let result = inputString.match(paramRegExp)
-  if (result) {
-    result.forEach((inputString) => {
-      params.push(inputString.trim().replace(/\"/g, ""))
-    })
+  if (wordInBrackets) {
+    error = true
   }
-  return { commandName: cmdName, commandParams: params }
+  return { commandName: words.shift(), commandParams: words, error }
 }
 
 export { caseInsensitiveSort, currentDate, pathFromArgv, parseInputStr }
