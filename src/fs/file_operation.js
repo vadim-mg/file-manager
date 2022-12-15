@@ -1,6 +1,6 @@
 import { checkParams } from "../errors/error_handler.js"
 import { createReadStream, createWriteStream } from "node:fs"
-import { rename, appendFile } from "node:fs/promises"
+import { rename, appendFile, rm as rmFile } from "node:fs/promises"
 import { resolve as resolvePath, parse } from "node:path"
 import { pipeline } from "node:stream/promises"
 
@@ -49,8 +49,9 @@ const mv = (argv = []) => {
   return ""
 }
 
-const rm = (argv = []) => {
+const rm = async (argv = []) => {
   checkParams("rm", argv, 1, "path_to_file")
+  await rmFile(argv[0])
   return ""
 }
 
