@@ -56,7 +56,7 @@ const parseInputStr = (inputString) => {
   if (wordInBrackets) {
     error = true
   }
-  return { commandName: words.shift(), commandParams: words, error }
+  return { commandName: words.shift(), commandArgv: words, error }
 }
 
 export { caseInsensitiveSort, currentDate, parseInputStr }
