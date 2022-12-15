@@ -26,7 +26,7 @@ process.on("exit", (exitCode) => {
 
 /* exit on ctrl-C */
 process.on("SIGINT", function () {
-  stdout.write('\n')
+  stdout.write("\n")
   process.exit(0)
 })
 

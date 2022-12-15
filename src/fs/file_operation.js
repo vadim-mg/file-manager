@@ -36,7 +36,7 @@ const cp = async (argv = []) => {
 
   const srcStream = createReadStream(srcPath)
   if (!srcStream.fd) {
-    //Если исходного файла нет, то выбросится нужное исключение, которое обработается в вызывающей функции
+    //If there isn't source file, correct exception will be catch to parent function
     srcStream.open
   }
   const destStream = createWriteStream(destPath)
@@ -57,7 +57,8 @@ const rm = async (argv = []) => {
   return ""
 }
 
-/* All functions in array must return a Promise ! */
+/* All functions in array must be async ! */
+/* All errors will handle in parent function by function errorHandler */
 const foCommands = {
   cat: cat,
   add: add,
