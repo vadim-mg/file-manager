@@ -26,6 +26,7 @@ process.on("exit", (exitCode) => {
 
 /* exit on ctrl-C */
 process.on("SIGINT", function () {
+  stdout.write('\n')
   process.exit(0)
 })
 
@@ -46,4 +47,3 @@ if (!userName) {
 
 stdout.write(`Welcome to the File Manager, ${userName}!\n`)
 stdout.write(prompt())
-// console.log(allCommands)
