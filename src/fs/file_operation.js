@@ -29,8 +29,18 @@ const rn = async (argv = []) => {
   return ""
 }
 
-const cp = (argv = []) => {
+const cp = async (argv = []) => {
   checkParams("cp", argv, 2, "path_to_file path_to_new_directory")
+  const srcPath = argv[0]
+  const destPath = resolvePath(argv[1], parse(srcPath).base)
+
+  const srcStream = createReadStream(srcPath)
+  if (!srcStream.fd) {
+    //Если исходного файла нет, то выбросится нужное исключение, которое обработается в вызывающей функции
+    srcStream.open()
+  }
+  const destStream = createWriteStream(destPath)
+  await pipeline(srcStream, destStream)
   return ""
 }
 
