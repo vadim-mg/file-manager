@@ -1,7 +1,7 @@
 const { stdin, stdout } = process
 import { EOL } from "node:os"
-import { prompt } from "./fs/navigation.js"
-import { executeCommand } from "./commands/commands.js"
+import { prompt } from "./commands/nav_operations.js"
+import { executeCommand } from "./exec/exec.js"
 
 const userNameArg = "username"
 
@@ -26,7 +26,7 @@ process.on("exit", (exitCode) => {
 
 /* exit on ctrl-C */
 process.on("SIGINT", function () {
-  stdout.write('\n')
+  stdout.write("\n")
   process.exit(0)
 })
 

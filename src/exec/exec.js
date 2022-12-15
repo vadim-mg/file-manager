@@ -1,5 +1,5 @@
-import { fsCommands } from "../fs/navigation.js"
-import { foCommands } from "../fs/file_operation.js"
+import { fsCommands } from "../commands/nav_operations.js"
+import { foCommands } from "../commands/file_operations.js"
 import { parseInputStr } from "../utils/utils.js"
 import { InvalidInputError } from "../errors/errors.js"
 import { errorHandler } from "../errors/error_handler.js"
