@@ -3,7 +3,6 @@ import { InvalidInputError } from "../errors/errors.js"
 import { NOT_SUPPORTED_PARAM } from "../errors/error_messages.js"
 
 const os = async (argv) => {
-  console.log
   switch (argv[0]) {
     case "--EOL":
       return JSON.stringify(EOL) + EOL
