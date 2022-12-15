@@ -18,3 +18,5 @@ export const NOT_PERMIT = "Operation not permitted"
 export const UNKNOWN_ERROR = (code = "") => `Error with code:${param(code)}`
 
 export const UNKNOWN_COMMAND = "Unknown command!"
+
+export const NOT_SUPPORTED_PARAM = "Not supported parameter!"
