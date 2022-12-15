@@ -44,8 +44,10 @@ const cp = async (argv = []) => {
   return ""
 }
 
-const mv = (argv = []) => {
+const mv = async (argv = []) => {
   checkParams("mv", argv, 2, "path_to_file path_to_new_directory")
+  await cp(argv)
+  await rm([argv[0]])
   return ""
 }
 
