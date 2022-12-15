@@ -1,7 +1,6 @@
 import { homedir } from "os"
 import { dirname } from "node:path"
 import { readdir } from "node:fs/promises"
-import { checkParams } from "../errors/error_handler.js"
 import { caseInsensitiveSort } from "../utils/utils.js"
 
 process.chdir(homedir())
@@ -9,19 +8,16 @@ process.chdir(homedir())
 const prompt = () => `You are currently in ${process.cwd()} # `
 
 const up = async (argv = []) => {
-  checkParams("up", argv, 0)
   process.chdir(dirname(process.cwd()))
   return ""
 }
 
 const cd = async (argv = []) => {
-  checkParams("cd", argv, 1, "target directory")
   process.chdir(argv[0])
   return ""
 }
 
 const ls = async (argv = []) => {
-  checkParams("ls", argv, 0)
   const dirList = await readdir(process.cwd(), { withFileTypes: true })
   const { dirs, files } = dirList.reduce(
     (acc, val) => {
@@ -45,12 +41,15 @@ const ls = async (argv = []) => {
   return ""
 }
 
-/* All functions in array must return a Promise ! */
+const exit = (code) => {
+  process.exit(0)
+}
+
 const fsCommands = {
-  up: up,
-  cd: cd,
-  ls: ls,
-  ".exit": () => process.exit(0),
+  "up": { f: up, argv: [] },
+  "cd": { f: cd, argv: ["target directory"] },
+  "ls": { f: ls, argv: [] },
+  ".exit": { f: exit, argv: [] },
 }
 
 export { prompt, fsCommands }
