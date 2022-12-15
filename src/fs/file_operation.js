@@ -1,17 +1,13 @@
 import { checkParams } from "../errors/error_handler.js"
-import { createReadStream } from "node:fs"
-import { rename } from "node:fs/promises"
-import { pathFromArgv } from "../utils/utils.js"
-import { appendFile } from "node:fs/promises"
+import { createReadStream, createWriteStream } from "node:fs"
+import { rename, appendFile } from "node:fs/promises"
+import { resolve as resolvePath, parse } from "node:path"
+import { pipeline } from "node:stream/promises"
 
 const cat = (argv = []) =>
   new Promise((resolve, reject) => {
     checkParams("cat", argv, 1, "path_to_file")
-
-    const targetPath = pathFromArgv(argv)
-    const stream = createReadStream(targetPath, {
-      encoding: "utf-8",
-    })
+    const stream = createReadStream(argv[0], { encoding: "utf-8" })
 
     stream.on("data", (chunk) => process.stdout.write(chunk))
     stream.on("end", () => resolve("\n"))
@@ -23,8 +19,7 @@ const cat = (argv = []) =>
 
 const add = async (argv = []) => {
   checkParams("add", argv, 1, "new_file_name")
-  const targetPath = pathFromArgv(argv)
-  await appendFile(targetPath, "", { flag: "ax+" })
+  await appendFile(argv[0], "", { flag: "ax+" })
   return ""
 }
 
@@ -35,12 +30,12 @@ const rn = async (argv = []) => {
 }
 
 const cp = (argv = []) => {
-  checkParams("cp", argv, 2, "path_to_file path_to_new_file")
+  checkParams("cp", argv, 2, "path_to_file path_to_new_directory")
   return ""
 }
 
 const mv = (argv = []) => {
-  checkParams("mv", argv, 2, "path_to_file path_to_new_file")
+  checkParams("mv", argv, 2, "path_to_file path_to_new_directory")
   return ""
 }
 

@@ -22,8 +22,6 @@ const currentDate = () => {
   return year + "-" + month + "-" + date
 }
 
-const pathFromArgv = (argv) => resolve(argv.join(" ").replace(/^\"|\"$/g, ""))
-
 const parseInputStr = (inputString) => {
   const words = []
   let countWords = 0
@@ -61,4 +59,4 @@ const parseInputStr = (inputString) => {
   return { commandName: words.shift(), commandParams: words, error }
 }
 
-export { caseInsensitiveSort, currentDate, pathFromArgv, parseInputStr }
+export { caseInsensitiveSort, currentDate, parseInputStr }

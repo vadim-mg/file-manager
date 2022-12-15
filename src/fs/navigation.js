@@ -2,7 +2,7 @@ import { homedir } from "os"
 import { dirname } from "node:path"
 import { readdir } from "node:fs/promises"
 import { checkParams } from "../errors/error_handler.js"
-import { caseInsensitiveSort, pathFromArgv } from "../utils/utils.js"
+import { caseInsensitiveSort } from "../utils/utils.js"
 
 process.chdir(homedir())
 
@@ -16,8 +16,7 @@ const up = async (argv = []) => {
 
 const cd = async (argv = []) => {
   checkParams("cd", argv, 1, "target directory")
-  const targetPath = pathFromArgv(argv)
-  process.chdir(targetPath)
+  process.chdir(argv[0])
   return ""
 }
 
