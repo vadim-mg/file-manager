@@ -37,7 +37,7 @@ const cp = async (argv = []) => {
   const srcStream = createReadStream(srcPath)
   if (!srcStream.fd) {
     //Если исходного файла нет, то выбросится нужное исключение, которое обработается в вызывающей функции
-    srcStream.open()
+    srcStream.open
   }
   const destStream = createWriteStream(destPath)
   await pipeline(srcStream, destStream)
