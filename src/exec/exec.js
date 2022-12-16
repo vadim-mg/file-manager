@@ -2,6 +2,7 @@ import { fsCommands } from "../commands/nav_operations.js"
 import { foCommands } from "../commands/file_operations.js"
 import { osCommands } from "../commands/os_operations.js"
 import { hashCommands } from "../commands/hash_operations.js"
+import { compressCommands } from "../commands/compress_operations.js"
 import { parseInputStr } from "../utils/utils.js"
 import { InvalidInputError } from "../errors/errors.js"
 import { errorHandler, checkParams } from "../errors/error_handler.js"
@@ -14,7 +15,7 @@ const executeCommand = async (inputString) => {
 
     if (commandName === "") return "" //if user entered only "enter", no errors, only new prompt
 
-    const libs = [fsCommands, foCommands, osCommands, hashCommands]
+    const libs = [fsCommands, foCommands, osCommands, hashCommands, compressCommands]
 
     for (let i = 0; i < libs.length; i++) {
       const command = libs[i][commandName]
@@ -25,7 +26,7 @@ const executeCommand = async (inputString) => {
     }
     throw new InvalidInputError()
   } catch (error) {
-    errorHandler(error)
+    await errorHandler(error)
   }
 }
 
