@@ -1,12 +1,11 @@
 import { logger } from "./logger.js"
 import { currentDate } from "../utils/utils.js"
-import {UNKNOWN_COMMAND} from "./error_messages.js"
+import { UNKNOWN_COMMAND } from "./error_messages.js"
 
 class FileManagerError extends Error {
   constructor(message, errorForDebug = null) {
     super(message)
     this.errorForDebug = errorForDebug
-
     if (errorForDebug) {
       logger.error(`--------${currentDate()}---------`)
       logger.error(`${this.name}:${this.message}`)

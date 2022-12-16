@@ -9,8 +9,6 @@ const hash = async (argv) => {
 
 /* All functions in array must be async ! */
 /* All errors will handle in parent function by function errorHandler */
-const hashCommands = {
+export const hashCommands = {
   "hash": { f: hash, argv: ["path_to_file"] },
 }
-
-export { hashCommands }

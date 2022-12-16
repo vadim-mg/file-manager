@@ -1,5 +1,3 @@
-import { resolve } from "node:path"
-
 const caseInsensitiveSort = (a, b) => {
   a = a.toLowerCase
   b = b.toLowerCase

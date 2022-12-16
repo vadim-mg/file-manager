@@ -15,7 +15,7 @@ export const ALREADY_EXIST = (targetPath = "") =>
 
 export const NOT_PERMIT = "Operation not permitted"
 
-export const UNKNOWN_ERROR = (code = "") => `Error with code:${param(code)}`
+export const UNKNOWN_ERROR = (code) => `Error with code: ${param(code)}`
 
 export const UNKNOWN_COMMAND = "Unknown command!"
 

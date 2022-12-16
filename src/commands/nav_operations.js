@@ -5,19 +5,17 @@ import { caseInsensitiveSort } from "../utils/utils.js"
 
 process.chdir(homedir())
 
-const prompt = () => `You are currently in ${process.cwd()} # `
-
-const up = async (argv = []) => {
+const up = async () => {
   process.chdir(dirname(process.cwd()))
   return ""
 }
 
-const cd = async (argv = []) => {
+const cd = async (argv) => {
   process.chdir(argv[0])
   return ""
 }
 
-const ls = async (argv = []) => {
+const ls = async () => {
   const dirList = await readdir(process.cwd(), { withFileTypes: true })
   const { dirs, files } = dirList.reduce(
     (acc, val) => {
@@ -41,15 +39,13 @@ const ls = async (argv = []) => {
   return ""
 }
 
-const exit = (code) => {
-  process.exit(0)
+const exit = () => {
+  process.exit()
 }
 
-const fsCommands = {
-  "up": { f: up, argv: [] },
-  "cd": { f: cd, argv: ["target directory"] },
-  "ls": { f: ls, argv: [] },
+export const fsCommands = {
+  up: { f: up, argv: [] },
+  cd: { f: cd, argv: ["target directory"] },
+  ls: { f: ls, argv: [] },
   ".exit": { f: exit, argv: [] },
 }
-
-export { prompt, fsCommands }

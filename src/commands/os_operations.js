@@ -29,8 +29,6 @@ const os = async (argv) => {
 
 /* All functions in array must be async ! */
 /* All errors will handle in parent function by function errorHandler */
-const osCommands = {
+export const osCommands = {
   os: { f: os, argv: ["--parameter"] },
 }
-
-export { osCommands }

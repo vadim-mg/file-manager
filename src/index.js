@@ -1,49 +1,64 @@
 const { stdin, stdout } = process
 import { EOL } from "node:os"
-import { prompt } from "./commands/nav_operations.js"
 import { executeCommand } from "./exec/exec.js"
 
-const userNameArg = "username"
+const USER_NAME_ARG = "username"
+const DEBUG_ARG = "debug"
 
-stdin.on("data", async (data) => {
+const getArgs = () =>
+  process.argv.slice(2).reduce((acc, val) => {
+    const keyValue = val.split("=")
+    acc[keyValue[0].slice(2)] = keyValue[1] ?? "Unknown"
+    return acc
+  }, {})
+
+const echo = (text, eol = true) => stdout.write(text + (eol ? EOL : ""))
+
+const prompt = () => echo(`You are currently in ${process.cwd()} # `, false)
+
+const showError = (error) => {
+  const debugMessage = debugMode ? ` : ${error.message}` : ""
+  echo(error.name + debugMessage)
+}
+
+const sayGoodbye = (exitCode) => {
+  if (exitCode === 0) {
+    echo(`Thank you for using File Manager, ${userName}, goodbye!`)
+  }
+}
+
+const sayHello = (userName) => {
+  echo(`Welcome to the File Manager, ${userName}!`)
+  prompt()
+}
+
+const dataHandler = async (data) => {
   try {
     const result = await executeCommand(data.toString().slice(0, -EOL.length))
-    stdout.write(result)
+    if (result.length) echo(result)
   } catch (error) {
-    stdout.write(`${error.name} : ${error.message} \n`)
+    showError(error)
   } finally {
-    stdout.write(prompt())
+    prompt()
   }
-})
+}
 
-process.on("exit", (exitCode) => {
-  if (exitCode === 0) {
-    stdout.write(`Thank you for using File Manager, ${userName}, goodbye!\n`)
-  } else {
-    stdout.write(`An error has occurred! ExitCode: ${exitCode}\n`)
-  }
-})
+const exit = () => {
+  echo("")
+  executeCommand(".exit")
+}
 
-/* exit on ctrl-C */
-process.on("SIGINT", function () {
-  stdout.write("\n")
-  process.exit(0)
-})
+stdin.on("data", dataHandler)
+process.on("exit", sayGoodbye)
+process.on("SIGINT", exit)
 
-const args = process.argv.slice(2).reduce((acc, val, i) => {
-  const keyValue = val.split("=")
-  acc[keyValue[0].slice(2)] = keyValue[1]
-  return acc
-}, {})
-
-const userName = args[userNameArg]
+const args = getArgs()
+const userName = args[USER_NAME_ARG]
+const debugMode = args[DEBUG_ARG] ?? null
 
 if (!userName) {
-  console.error(
-    `Haven\'t been assign the parameter --${userNameArg}=your_username. Set it and try again.`
-  )
+  echo(`Haven\'t been assign the parameter --${USER_NAME_ARG}=your_username. Try again.`)
   process.exit(1)
 }
 
-stdout.write(`Welcome to the File Manager, ${userName}!\n`)
-stdout.write(prompt())
+sayHello(userName)
