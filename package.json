@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Nodejs-task for https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/file-manager/assignment.md",
   "type": "module",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node src/index.js",
-    "test": "node src/index.js \"--username=Vadim MG\" --additional=help"
+    "start": "node src/app.js",
+    "test": "node src/app.js \"--username=TESTUSER\"",
+    "debug": "node src/app.js \"--username=TESTUSER\" --debug"
   },
   "repository": {
     "type": "git",
