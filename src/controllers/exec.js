@@ -10,6 +10,7 @@ const executeCommand = async (inputString) => {
     if (error) throw new InvalidInputError("Not correct input data")
 
     if (commandName === "") return "" //if user entered only "enter", no errors, only new prompt
+    if (commandName === "help") return help()
 
     for (let i = 0; i < libs.length; i++) {
       const command = libs[i][commandName]
@@ -20,8 +21,23 @@ const executeCommand = async (inputString) => {
     }
     throw new InvalidInputError()
   } catch (error) {
+    console.error(error)
     await errorHandler(error)
   }
 }
+
+const help = () =>
+  "\nAll supported commands:\n" +
+  libs.reduce((accLib, valLib) => {
+    let argv = ""
+    for (var key in valLib) {
+      argv =
+        argv +
+        "    " +
+        valLib[key].argv.reduce((accArgs, valArgs) => accArgs + " " + valArgs, key) +
+        "\n"
+    }
+    return accLib + argv + "\n"
+  }, "")
 
 export { executeCommand }
