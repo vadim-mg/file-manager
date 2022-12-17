@@ -1,0 +1,27 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "Nodejs-task for https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/file-manager/assignment.md",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "test": "node src/app.js \"--username=TESTUSER\"",
+    "debug": "node src/app.js \"--username=TESTUSER\" --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vadim-mg/file-manager.git"
+  },
+  "author": "vadim-mg",
+  "keywords": [
+    "nodejs",
+    "RSS-nodejs-task",
+    "fileManager"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vadim-mg/file-manager/issues"
+  },
+  "homepage": "https://github.com/vadim-mg/file-manager#readme"
+}
