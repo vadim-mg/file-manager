@@ -1,5 +1,7 @@
 ### File-manager
 
+deadline: 2022-12-20
+Self-Score: 330
 ---
 - [task](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/file-manager/assignment.md)
 - [scoring](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/file-manager/score.md)
