@@ -1,6 +1,12 @@
 import { EOL } from "node:os"
-import { executeCommand } from "./exec/exec.js"
-import { USER_NAME_ARG, DEBUG_ARG, HELP_ARG, ARG_KEYS, getArgs } from "./exec/app_args.js"
+import { executeCommand } from "./controllers/exec.js"
+import {
+  USER_NAME_ARG,
+  DEBUG_ARG,
+  HELP_ARG,
+  ARG_KEYS,
+  getArgs,
+} from "./controllers/app_args.js"
 import {
   echo,
   prompt,
@@ -8,7 +14,7 @@ import {
   sayGoodbye,
   sayHello,
   printAllArgs,
-} from "./exec/output_commands.js"
+} from "./controllers/output_commands.js"
 
 /**
  * tries execute command from steam Buffer
