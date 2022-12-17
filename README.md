@@ -27,6 +27,11 @@ or for --username=TESTUSER in debug mode (errors will be more informative):
 ```
 npm run debug
 ```
+The most comfortable usage:
+```
+node src/app.js --username=vadim --debug
+```
+all errors can be understand, and consol more friendly, can use las command
 ---
 ### Usage
 #### All supported commands:
