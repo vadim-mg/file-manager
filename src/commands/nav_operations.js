@@ -45,7 +45,7 @@ const exit = () => {
 
 export const fsCommands = {
   up: { f: up, argv: [] },
-  cd: { f: cd, argv: ["target directory"] },
+  cd: { f: cd, argv: ["target_directory"] },
   ls: { f: ls, argv: [] },
   ".exit": { f: exit, argv: [] },
 }
