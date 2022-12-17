@@ -21,7 +21,6 @@ const executeCommand = async (inputString) => {
     }
     throw new InvalidInputError()
   } catch (error) {
-    console.error(error)
     await errorHandler(error)
   }
 }

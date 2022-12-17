@@ -13,14 +13,14 @@ const pipeZipMethod = async (srcPath, destPath, func = null) => {
 }
 
 const compress = async (argv) => {
-  let destPath = argv[1] + argv[1].endsWith(".br") ? "" : ".br"
+  let destPath = argv[1] + (argv[1].endsWith(".br") ? "" : ".br")
   await pipeZipMethod(argv[0], destPath, createBrotliCompress)
-  return ""
+  return `File ${argv[0]} was compressed to  ${destPath}!`
 }
 
 const decompress = async (argv) => {
   await pipeZipMethod(argv[0], argv[1], createBrotliDecompress)
-  return ""
+  return `File ${argv[0]} was decompressed to  ${argv[1]}!`
 }
 
 /* All functions in array must be async ! */

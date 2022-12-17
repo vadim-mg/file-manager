@@ -14,7 +14,7 @@ const os = async (argv) => {
       return (
         `${cpuCount} CPU${cpuCount > 1 ? "s" : ""}:${EOL}` +
         `   model: ${model}${EOL}` +
-        `   speed: ${speed / 1000} Gz${EOL}`
+        `   speed: ${speed / 1000} GHz${EOL}`
       )
     case "--homedir":
       return homedir + EOL

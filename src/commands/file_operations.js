@@ -8,7 +8,7 @@ const cat = (argv) =>
     const stream = createReadStream(argv[0], { encoding: "utf-8" })
 
     stream.on("data", (chunk) => process.stdout.write(chunk))
-    stream.on("end", () => res("\n"))
+    stream.on("end", () => res(""))
     stream.on("error", (error) => {
       stream.close()
       return rej(error)
